@@ -1,0 +1,3 @@
+Manifest-Version: 1.0
+Class-Path: lib/commons-compress-1.18.jar lib/org.bouncycastle.jar				
+Main-Class: generate7z

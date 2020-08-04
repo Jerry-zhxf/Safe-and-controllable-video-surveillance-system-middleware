@@ -1,0 +1,3 @@
+1 Manifest-Version: 1.0
+2 Class-Path: lib/RXTXcomm.jar
+3 Main-Class: generate7z

@@ -1,0 +1,81 @@
+package generate7z;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+
+import encryption.SM2;
+import encryption.SM4;
+
+
+class VideoThread extends Thread {
+	private String PY_URL;
+	VideoThread(String PY_URL){
+		this.PY_URL = PY_URL;
+	}
+	public void run() {
+		System.out.println("开始录制");
+		//调用python代码
+		Generate7z g7z = new Generate7z();
+		try {
+			String file = g7z.execPy(PY_URL);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.out.println("录制完毕");
+		//g7z.func(file, path);//file会是返回参数，path自己定
+		
+	}
+}
+
+public class Generate7z {
+	public String execPy(String PY_URL) throws InterruptedException {
+		Process proc = null;
+		String result = "";
+		try {
+			proc = Runtime.getRuntime().exec("python " + PY_URL);
+			//proc.waitFor();
+			InputStreamReader ir = new InputStreamReader(proc.getInputStream());
+            LineNumberReader input = new LineNumberReader(ir);
+            result = input.readLine();
+            input.close();
+            ir.close();
+          //proc.waitFor();
+            
+		}catch (IOException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	public String func(String file, String path) throws Exception {
+		SM2 sm2 = new SM2();
+		SM4 sm4 = new SM4();
+		String key = sm4.func_cryptsm4(file,path);
+		String sp1 = sm2.func_cryptsm2(key);
+		System.out.println(sp1);
+        FileWriter writer;
+        try {
+            writer = new FileWriter("encryption.txt");
+            writer.write(sp1);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		return sp1;
+	}
+	public static void main(String args[]) {
+		String filepath = "C:\\Users\\zh200\\Desktop\\树莓派代码\\test.py";
+		while(true) {
+			VideoThread T = new VideoThread(filepath);
+			T.start();
+			try {
+				Thread.sleep(100*1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+}

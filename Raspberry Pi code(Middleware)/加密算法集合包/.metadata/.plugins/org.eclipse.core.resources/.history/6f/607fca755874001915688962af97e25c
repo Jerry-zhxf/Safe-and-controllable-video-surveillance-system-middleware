@@ -1,0 +1,41 @@
+package generate7z;
+
+import java.io.FileWriter;
+import java.io.IOException;
+
+import encryption.SM2;
+import encryption.SM4;
+
+
+class VideoThread extends Thread {
+	VideoThread(){}
+	public void run() {
+		//调用python代码
+		Generate7z g7z = new Generate7z();
+		g7z.func(file, path);//file会是返回参数，path自己定
+	}
+	public void start() {
+		System.out.println("开始录制");
+	}
+}
+
+public class Generate7z {
+	public String func(String file, String path) throws Exception {
+		SM2 sm2 = new SM2();
+		SM4 sm4 = new SM4();
+		String key = sm4.func_cryptsm4(file,path);
+		String sp1 = sm2.func_cryptsm2(key);
+		System.out.println(sp1);
+        FileWriter writer;
+        try {
+            writer = new FileWriter("encryption.txt");
+            writer.write(sp1);
+            writer.flush();
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+		return sp1;
+	}
+	
+}

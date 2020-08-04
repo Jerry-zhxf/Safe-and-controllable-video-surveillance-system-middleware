@@ -1,0 +1,4 @@
+IP£º172.10.18.1
+Username£ºuser
+password£º123
+remoteDir:/home/FTP
